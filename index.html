@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Receitas FIT - TCC</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url("banner.png") no-repeat center center fixed;
+      background-size: cover;
+    }
+    .banner {
+      padding: 60px 20px 20px;
+      text-align: center;
+      color: white;
+      text-shadow: 2px 2px 4px #000;
+    }
+    .banner h2 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    .banner p {
+      font-size: 1.1em;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 6px;
+    }
+    .container {
+      margin-top: 40px;
+      background: white;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+    
+    :root {
+      --laranja: #f57c00;
+      --creme: #fffaf1;
+      --cinza-texto: #333;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--creme);
+      color: var(--cinza-texto);
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--laranja);
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header a.logo {
+      color: white;
+      text-decoration: none;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .banner {
+      background: url('banner.jpg') no-repeat center center;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      color: white;
+      text-shadow: 2px 2px 4px #000;
+      position: relative;
+      padding-top: 120px;
+    }
+
+    .banner h2 {
+      font-size: 2.7em;
+      margin-bottom: 15px;
+    }
+
+    .banner p {
+      font-size: 1.2em;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 8px 16px;
+      border-radius: 6px;
+      margin-bottom: 40px;
+    }
+
+    .form-card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 600px;
+      position: absolute;
+      top: 65%;
+      transform: translateY(-50%);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 15px 0 5px;
+      font-size: 0.95em;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+    button {
+      margin-top: 20px;
+      background-color: var(--laranja);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+      width: 100%;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin: 30px;
+    }
+    .receita {
+      background-color: #fff4e0;
+      padding: 15px;
+      border-left: 5px solid var(--laranja);
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+    .sem-resultado {
+      color: #d32f2f;
+      font-weight: bold;
+      text-align: center;
+    }
+    #contador {
+      font-weight: bold;
+      color: #444;
+      text-align: center;
+      margin: 20px;
+    }
+    footer {
+      background: #eee;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">Receitas FIT</a>
+    <nav>
+      <a href="receitas.html">Receitas</a>
+      <a href="sobre.html">Sobre</a>
+    </nav>
+  </header>
+
+  <div class="banner">
+    <h2>Recomendações de Receitas Saudáveis</h2>
+    <p>Informe os ingredientes e tempo disponível. Nós te mostramos a receita ideal!</p>
+
+    <div class="form-card">
+      <label for="ingredientes">Ingredientes disponíveis:</label>
+      <input type="text" id="ingredientes" placeholder="Ex: carne, arroz, tomate" />
+      <label for="tempo">Tempo disponível (em minutos):</label>
+      <input type="number" id="tempo" placeholder="Ex: 30" />
+      <button onclick="buscarReceitas()">Buscar Receitas</button>
+    </div>
+  </div>
+
+  <div id="contador"></div>
+  <div class="cards" id="resultados"></div>
+
+  <footer>
+    Aplicação Web para Recomendação de Receitas | TCC - UNORTE
+  </footer>
+
+  <script>
+    const receitas = [
+      {
+        nome: "Panqueca de Aveia",
+        tempo: 15,
+        ingredientes: ["ovo", "aveia", "banana"],
+        preparo: "Misture 1 ovo com 3 colheres de aveia e 1 banana amassada. Doure em frigideira antiaderente."
+      },
+      {
+        nome: "Carne Moída com Abóbora",
+        tempo: 35,
+        ingredientes: ["carne moída", "abóbora", "cebola"],
+        preparo: "Refogue a carne com alho e cebola. Acrescente a abóbora em cubos e cozinhe até ficar macia."
+      },
+      {
+        nome: "Filé de Frango com Brócolis",
+        tempo: 25,
+        ingredientes: ["frango", "brócolis", "alho"],
+        preparo: "Grelhe os filés com alho e azeite. Cozinhe o brócolis no vapor e sirva junto."
+      },
+      {
+        nome: "Escondidinho de Carne",
+        tempo: 40,
+        ingredientes: ["carne moída", "batata doce", "cebola"],
+        preparo: "Cozinhe e amasse a batata doce. Refogue a carne com cebola e monte camadas. Leve ao forno para gratinar."
+      },
+      {
+        nome: "Tabule com Frango",
+        tempo: 20,
+        ingredientes: ["trigo para quibe", "frango", "hortelã"],
+        preparo: "Hidrate o trigo. Misture com frango desfiado, hortelã, tomate e limão."
+      },
+      {
+        nome: "Tilápia Assada com Ervas",
+        tempo: 30,
+        ingredientes: ["tilápia", "limão", "alecrim"],
+        preparo: "Tempere os filés com limão, sal e ervas. Asse em forno médio por 25 minutos."
+      }
+    ];
+
+    function buscarReceitas() {
+      const normalizar = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+      const tempo = parseInt(document.getElementById("tempo").value);
+      const ingredientesInput = document.getElementById("ingredientes").value
+        .split(",")
+        .map(normalizar)
+        .filter(i => i !== "");
+
+      const resultadosDiv = document.getElementById("resultados");
+      const contadorDiv = document.getElementById("contador");
+      resultadosDiv.innerHTML = "";
+      contadorDiv.innerHTML = "";
+
+      const encontradas = receitas.filter(r => {
+        const tempoOk = r.tempo <= tempo;
+        const ingredientesOk = r.ingredientes.map(normalizar).some(i => ingredientesInput.includes(i));
+        return tempoOk && ingredientesOk;
+      });
+
+      if (encontradas.length > 0) {
+        contadorDiv.innerHTML = `${encontradas.length} receita(s) encontrada(s):`;
+        encontradas.forEach(r => {
+          const div = document.createElement("div");
+          div.className = "receita";
+          div.innerHTML = `
+            <strong>${r.nome}</strong><br>
+            <em>Tempo:</em> ${r.tempo} min<br>
+            <em>Ingredientes:</em> ${r.ingredientes.join(", ")}<br>
+            <em>Preparo:</em> ${r.preparo}
+          `;
+          resultadosDiv.appendChild(div);
+        });
+      } else {
+        resultadosDiv.innerHTML = '<p class="sem-resultado">Nenhuma receita encontrada. Tente mudar os ingredientes ou o tempo.</p>';
+      }
+    }
+  </script>
+</body>
+</html>
